@@ -1,0 +1,48 @@
+# Biến môi trường và tệp xác thực
+.env
+.env.*
+!.env.example
+.envrc
+.netrc
+.pgpass
+.pg_service.conf
+credentials/
+secrets/
+tokens/
+credentials.json
+service-account*.json
+*token*.txt
+*password*.txt
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Môi trường và cache Python
+.venv/
+.python312/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Dữ liệu, kết quả, minh chứng, log và backup
+data/
+results/
+evidence/
+screenshots/
+logs/
+backup/
+backups/
+*.csv
+*.tsv
+*.parquet
+*.dump
+*.backup
+*.sql.gz
+*.log
+*.log.*
+
+# Tệp hệ điều hành
+.DS_Store
+Thumbs.db

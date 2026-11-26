@@ -1,0 +1,48 @@
+name: hqt-neo4j-benchmark
+
+services:
+  neo4j:
+    profiles: [neo4j]
+    image: neo4j:5.26.34-community
+    container_name: hqt-neo4j-benchmark
+    cpus: "${BENCHMARK_NEO4J_CPUS:-2.0}"
+    mem_limit: "${BENCHMARK_NEO4J_MEMORY_LIMIT:-2g}"
+    ports:
+      - "127.0.0.1:${BENCHMARK_NEO4J_HTTP_PORT:-7475}:7474"
+      - "127.0.0.1:${BENCHMARK_NEO4J_BOLT_PORT:-7688}:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/${BENCHMARK_NEO4J_PASSWORD:?Set BENCHMARK_NEO4J_PASSWORD in benchmark/.env}"
+      NEO4J_server_memory_heap_initial__size: "${BENCHMARK_NEO4J_HEAP_INITIAL:-512m}"
+      NEO4J_server_memory_heap_max__size: "${BENCHMARK_NEO4J_HEAP_MAX:-512m}"
+      NEO4J_server_memory_pagecache_size: "${BENCHMARK_NEO4J_PAGE_CACHE:-512m}"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+
+  postgres:
+    profiles: [postgres]
+    image: postgres:17.12
+    container_name: hqt-postgres-benchmark
+    cpus: "${BENCHMARK_POSTGRES_CPUS:-2.0}"
+    mem_limit: "${BENCHMARK_POSTGRES_MEMORY_LIMIT:-2g}"
+    ports:
+      - "127.0.0.1:${BENCHMARK_POSTGRES_PORT:-5433}:5432"
+    environment:
+      POSTGRES_DB: "${BENCHMARK_POSTGRES_DB:-fraud_benchmark}"
+      POSTGRES_USER: "${BENCHMARK_POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${BENCHMARK_POSTGRES_PASSWORD:?Set BENCHMARK_POSTGRES_PASSWORD in benchmark/.env}"
+    command:
+      - postgres
+      - -c
+      - "shared_buffers=${BENCHMARK_POSTGRES_SHARED_BUFFERS:-256MB}"
+      - -c
+      - "work_mem=${BENCHMARK_POSTGRES_WORK_MEM:-4MB}"
+      - -c
+      - "maintenance_work_mem=${BENCHMARK_POSTGRES_MAINTENANCE_WORK_MEM:-64MB}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  postgres_data:

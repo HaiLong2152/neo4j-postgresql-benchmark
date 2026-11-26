@@ -1,0 +1,28 @@
+name: hqt-postgres-demo
+
+services:
+  postgres:
+    image: postgres:17.12
+    container_name: hqt-postgres-demo
+    mem_limit: 2g
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: fraud_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${POSTGRES_DEMO_PASSWORD:?Set POSTGRES_DEMO_PASSWORD in postgres-demo/.env}"
+    command:
+      - postgres
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - maintenance_work_mem=64MB
+      - -c
+      - max_connections=100
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
