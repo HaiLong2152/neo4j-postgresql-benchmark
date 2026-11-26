@@ -5,6 +5,7 @@ services:
     image: neo4j:5.26.34-community
     container_name: hqt-neo4j-demo
     restart: unless-stopped
+    cpus: 2.0
     mem_limit: 2g
     ports:
       - "127.0.0.1:7474:7474"

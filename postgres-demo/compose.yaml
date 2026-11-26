@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres:17.12
     container_name: hqt-postgres-demo
+    cpus: 2.0
     mem_limit: 2g
     ports:
       - "127.0.0.1:5432:5432"

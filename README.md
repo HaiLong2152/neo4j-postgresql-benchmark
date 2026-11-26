@@ -6,12 +6,12 @@ Repository này dùng để tái lập môi trường triển khai Neo4j và Pos
 
 | Thư mục | Image | Container | Cổng trên máy chạy Docker | Giới hạn CPU | Giới hạn RAM |
 | --- | --- | --- | --- | --- | --- |
-| `demo/` | `neo4j:5.26.34-community` | `hqt-neo4j-demo` | `127.0.0.1:7474` (HTTP), `127.0.0.1:7687` (Bolt) | Theo giới hạn chung của Docker | 2 GiB |
-| `postgres-demo/` | `postgres:17.12` | `hqt-postgres-demo` | `127.0.0.1:5432` | Theo giới hạn chung của Docker | 2 GiB |
+| `demo/` | `neo4j:5.26.34-community` | `hqt-neo4j-demo` | `127.0.0.1:7474` (HTTP), `127.0.0.1:7687` (Bolt) | 2 CPU logic | 2 GiB |
+| `postgres-demo/` | `postgres:17.12` | `hqt-postgres-demo` | `127.0.0.1:5432` | 2 CPU logic | 2 GiB |
 | `benchmark/`, profile `neo4j` | `neo4j:5.26.34-community` | `hqt-neo4j-benchmark` | `127.0.0.1:7475` (HTTP), `127.0.0.1:7688` (Bolt) | 2 CPU logic mặc định | 2 GiB mặc định |
 | `benchmark/`, profile `postgres` | `postgres:17.12` | `hqt-postgres-benchmark` | `127.0.0.1:5433` | 2 CPU logic mặc định | 2 GiB mặc định |
 
-Hai service demo chưa đặt giới hạn CPU riêng. Các container dùng named volume cho dữ liệu. Neo4j có thêm named volume cho `/logs`.
+Hai service demo đều giới hạn năng lực xử lý tương đương 2 CPU logic và 2 GiB RAM mỗi container. Đây là hạn mức CPU, không phải cấp riêng hai lõi vật lý. Các container dùng named volume cho dữ liệu. Neo4j có thêm named volume cho `/logs`.
 
 ## 2. Yêu cầu và chuẩn bị
 
@@ -221,7 +221,7 @@ docker inspect --format '{{.Name}} CPU={{.HostConfig.NanoCpus}} RAM={{.HostConfi
 docker inspect --format '{{.Name}} CPU={{.HostConfig.NanoCpus}} RAM={{.HostConfig.Memory}}' hqt-postgres-benchmark
 ```
 
-Với cấu hình trong repository, demo có `CPU=0` ở trường này vì Compose chưa đặt hạn mức riêng. Benchmark mặc định có `CPU=2000000000`. Cả hai mặc định có `RAM=2147483648`. Có thể xem mức sử dụng tại thời điểm kiểm tra bằng `docker stats --no-stream hqt-neo4j-benchmark` hoặc lệnh tương tự với tên container PostgreSQL.
+Với cấu hình trong repository, cả hai service demo có `CPU=2000000000` và `RAM=2147483648`. Hai service benchmark mặc định có cùng giới hạn; nếu thay đổi `.env`, đối chiếu với giá trị thực tế đã chọn. Số liệu sử dụng tức thời không phải kết quả benchmark. Có thể xem mức sử dụng tại thời điểm kiểm tra bằng `docker stats --no-stream hqt-neo4j-benchmark` hoặc lệnh tương tự với tên container PostgreSQL.
 
 ## 7. Xung đột cổng và lỗi thường gặp
 
